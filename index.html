@@ -6,23 +6,22 @@
   <title>Cyberpunk Leaderboard</title>
   <style>
     body {
-      background: #000;
-      color: #0f0;
-      font-family: 'Courier New', Courier, monospace;
       margin: 0;
       padding: 20px;
+      font-family: 'Courier New', Courier, monospace;
+      background: #000;
+      color: #0f0;
       text-shadow: 0 0 5px #0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      overflow-x: hidden;
       position: relative;
-      overflow: hidden;
     }
 
     h1, h2 {
       margin: 10px auto;
       text-align: center;
-      z-index: 2;
     }
 
     h2 {
@@ -57,7 +56,6 @@
       width: 100%;
       max-width: 800px;
       animation: flicker 3s infinite;
-      z-index: 2;
     }
 
     table {
@@ -96,57 +94,65 @@
       }
     }
 
-    /* Scanlines effect */
-    .scanlines::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 255, 0, 0.05) 0px,
-        rgba(0, 255, 0, 0.05) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    /* Star background */
-    .stars {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: transparent;
-      z-index: 0;
-      overflow: hidden;
-    }
-
+    /* 🌌 Star styles */
     .star {
-      position: absolute;
+      position: fixed;
       width: 2px;
       height: 2px;
       background: #0f0;
       border-radius: 50%;
-      animation: twinkle 2s infinite;
+      opacity: 0.5;
+      animation: twinkle 2s infinite alternate;
+      z-index: -2;
     }
 
     @keyframes twinkle {
-      0%, 100% { opacity: 0.1; }
-      50% { opacity: 1; }
+      from { opacity: 0.2; }
+      to { opacity: 1; }
+    }
+
+    /* 📺 Scanlines overlay */
+    .scanlines {
+      pointer-events: none;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 0, 0.02),
+        rgba(0, 255, 0, 0.02) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      z-index: -1;
+    }
+
+    .click-message {
+      margin-top: 30px;
+      font-size: 1em;
+      color: #0f0;
+      animation: flicker 1.5s infinite;
+      text-align: center;
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="scanlines">
-  <!-- Starfield -->
-  <div class="stars" id="stars"></div>
+<body>
 
-  <!-- Headings -->
+  <!-- 🎵 Music -->
+  <audio id="bgMusic" loop>
+    <source src="cyberpunk-audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- 📺 Scanlines -->
+  <div class="scanlines"></div>
+
+  <!-- 🏆 Headings -->
   <h2>AI & T-shirt Giveaway</h2>
   <h1>College Leaderboard</h1>
 
-  <!-- Leaderboard -->
+  <!-- 📊 Leaderboard Table -->
   <div class="table-container">
     <table>
       <thead>
@@ -157,42 +163,37 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td>1</td><td>NeoTech Institute</td><td><span class="count" data-target="120">0</span></td></tr>
-        <tr><td>2</td><td>Cybernetic University</td><td><span class="count" data-target="110">0</span></td></tr>
-        <tr><td>3</td><td>Horizon Community College</td><td><span class="count" data-target="95">0</span></td></tr>
-        <tr><td>4</td><td>Aurora Polytechnic</td><td><span class="count" data-target="80">0</span></td></tr>
-        <tr><td>5</td><td>Quantum City College</td><td><span class="count" data-target="75">0</span></td></tr>
+        <tr><td>1</td><td>ABES Engineering College</td><td><span class="count" data-target="41">0</span></td></tr>
+        <tr><td>2</td><td>AMU/ZHCET</td><td><span class="count" data-target="20">0</span></td></tr>
+        <tr><td>3</td><td>KIET Group of Institutions</td><td><span class="count" data-target="10">0</span></td></tr>
+        <tr><td>4</td><td>Noida Institute of Engineering and Technology</td><td><span class="count" data-target="5">0</span></td></tr>
+        <tr><td>5</td><td>Pimpri Chinchwad University </td><td><span class="count" data-target="3">0</span></td></tr>
+        <tr><td>5</td><td>Galgotias</td><td><span class="count" data-target="3">0</span></td></tr>
+        <tr><td>7</td><td>Chandigarh University</td><td><span class="count" data-target="2">0</span></td></tr>      
+        <tr><td>7</td><td>SRM University</td><td><span class="count" data-target="2">0</span></td></tr>
+        <tr><td>9</td><td>GL Bajaj</td><td><span class="count" data-target="1">0</span></td></tr>
+        <tr><td>9</td><td>RKGIT</td><td><span class="count" data-target="1">0</span></td></tr>
+        <tr><td>9</td><td>Silicon University</td><td><span class="count" data-target="1">0</span></td></tr>
+        <tr><td>9</td><td>University of Engineering & Management</td><td><span class="count" data-target="1">0</span></td></tr>
+        <tr><td>13</td><td>Delhi Technological University</td><td><span class="count" data-target="0">0</span></td></tr>
       </tbody>
     </table>
   </div>
 
-  
-  <!-- Background music (Hidden YouTube iframe) -->
-  <iframe
-    id="ytplayer"
-    width="0" height="0"
-    src="https://www.youtube.com/embed/cIto6qzW0Mc?autoplay=1&loop=1&playlist=cIto6qzW0Mc&controls=0&mute=0"
-    frameborder="0"
-    allow="autoplay"
-    allowfullscreen
-    style="position: absolute; left: -9999px;"
-  ></iframe>
-
-    <audio autoplay loop>
-    <source src="https://drive.google.com/file/d/1YKMxy7ZnlP5kSDEDQ4JzV1i9hPNigR6i/view?usp=sharing" type="audio/mpeg">
-    </audio>
+  <!-- 👇 Message for music -->
+  <p class="click-message" id="clickMessage">Click anywhere to play cyberpunk music</p>
 
   <script>
-    // Counter animation
+    // 📈 Animate counters
     const counters = document.querySelectorAll('.count');
     counters.forEach(counter => {
       const updateCount = () => {
         const target = +counter.getAttribute('data-target');
         const count = +counter.innerText;
-        const increment = Math.ceil(target / 50); // speed
+        const increment = Math.ceil(target / 1000);
         if (count < target) {
           counter.innerText = count + increment > target ? target : count + increment;
-          setTimeout(updateCount, 20);
+          setTimeout(updateCount, 150);
         } else {
           counter.innerText = target;
         }
@@ -200,15 +201,27 @@
       updateCount();
     });
 
-    // Star generator
-    const starsContainer = document.getElementById("stars");
-    for (let i = 0; i < 100; i++) {
+    // 🔊 Play music on first click & hide message
+    let musicPlayed = false;
+    document.body.addEventListener('click', () => {
+      if (!musicPlayed) {
+        document.getElementById("bgMusic").play();
+        const msg = document.getElementById("clickMessage");
+        if (msg) msg.style.display = "none";
+        musicPlayed = true;
+      }
+    });
+
+    // 🌠 Generate stars
+    const starCount = 150; // Fixed number of stars
+    for (let i = 0; i < starCount; i++) {
       const star = document.createElement("div");
-      star.className = "star";
-      star.style.top = Math.random() * 100 + "vh";
-      star.style.left = Math.random() * 100 + "vw";
-      star.style.animationDuration = (Math.random() * 2 + 1) + "s";
-      starsContainer.appendChild(star);
+      star.classList.add("star");
+      star.style.top = `${Math.random() * 100}vh`;
+      star.style.left = `${Math.random() * 100}vw`;
+      star.style.opacity = Math.random().toFixed(2);
+      star.style.animationDuration = `${1 + Math.random() * 2}s`;
+      document.body.appendChild(star);
     }
   </script>
 </body>
