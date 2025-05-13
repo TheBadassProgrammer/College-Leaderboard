@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyberpunk Leaderboard</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 20px;
+      text-shadow: 0 0 5px #0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    h1, h2 {
+      margin: 10px auto;
+      text-align: center;
+      z-index: 2;
+    }
+
+    h2 {
+      font-size: 2em;
+      animation: glitch 2s infinite;
+    }
+
+    h1 {
+      font-size: 2.5em;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
+      40% { text-shadow: 2px 2px lime, -2px -2px blue; }
+      60% { text-shadow: -2px 2px lime, 2px -2px blue; }
+      80% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      100% { text-shadow: 0 0 5px #0f0; }
+    }
+
+    @keyframes flicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.7;
+      }
+    }
+
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+      max-width: 800px;
+      animation: flicker 3s infinite;
+      z-index: 2;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #0f0;
+    }
+
+    th, td {
+      border: 1px solid #0f0;
+      padding: 10px;
+      text-align: left;
+      font-size: 1.1em;
+    }
+
+    th {
+      background-color: rgba(0, 255, 0, 0.1);
+    }
+
+    tr:nth-child(even) td {
+      background-color: rgba(0, 255, 0, 0.05);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8em;
+      }
+
+      h2 {
+        font-size: 1.5em;
+      }
+
+      th, td {
+        font-size: 0.9em;
+        padding: 6px;
+      }
+    }
+
+    /* Scanlines effect */
+    .scanlines::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 0, 0.05) 0px,
+        rgba(0, 255, 0, 0.05) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Star background */
+    .stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: transparent;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #0f0;
+      border-radius: 50%;
+      animation: twinkle 2s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="scanlines">
+  <!-- Starfield -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Headings -->
+  <h2>AI & T-shirt Giveaway</h2>
+  <h1>College Leaderboard</h1>
+
+  <!-- Leaderboard -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>College/University</th>
+          <th>No. of Participants</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>NeoTech Institute</td><td><span class="count" data-target="120">0</span></td></tr>
+        <tr><td>2</td><td>Cybernetic University</td><td><span class="count" data-target="110">0</span></td></tr>
+        <tr><td>3</td><td>Horizon Community College</td><td><span class="count" data-target="95">0</span></td></tr>
+        <tr><td>4</td><td>Aurora Polytechnic</td><td><span class="count" data-target="80">0</span></td></tr>
+        <tr><td>5</td><td>Quantum City College</td><td><span class="count" data-target="75">0</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <!-- Background music (Hidden YouTube iframe) -->
+  <iframe
+    id="ytplayer"
+    width="0" height="0"
+    src="https://www.youtube.com/embed/cIto6qzW0Mc?autoplay=1&loop=1&playlist=cIto6qzW0Mc&controls=0&mute=0"
+    frameborder="0"
+    allow="autoplay"
+    allowfullscreen
+    style="position: absolute; left: -9999px;"
+  ></iframe>
+
+    <audio autoplay loop>
+    <source src="https://drive.google.com/file/d/1YKMxy7ZnlP5kSDEDQ4JzV1i9hPNigR6i/view?usp=sharing" type="audio/mpeg">
+    </audio>
+
+  <script>
+    // Counter animation
+    const counters = document.querySelectorAll('.count');
+    counters.forEach(counter => {
+      const updateCount = () => {
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText;
+        const increment = Math.ceil(target / 50); // speed
+        if (count < target) {
+          counter.innerText = count + increment > target ? target : count + increment;
+          setTimeout(updateCount, 20);
+        } else {
+          counter.innerText = target;
+        }
+      };
+      updateCount();
+    });
+
+    // Star generator
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.top = Math.random() * 100 + "vh";
+      star.style.left = Math.random() * 100 + "vw";
+      star.style.animationDuration = (Math.random() * 2 + 1) + "s";
+      starsContainer.appendChild(star);
+    }
+  </script>
+</body>
+</html>
