@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>College Leaderboard</title>
+  <title>Giveaway Leaderboard</title>
   <style>
     body {
       margin: 0;
@@ -15,18 +15,20 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      overflow-x: hidden;
+      overflow: hidden;
       position: relative;
     }
 
     h1, h2 {
       margin: 10px auto;
       text-align: center;
+      position: relative;
+      z-index: 3;
     }
 
     h2 {
       font-size: 2em;
-      animation: glitch 2s infinite;
+      animation: glitch 3s infinite;
     }
 
     h1 {
@@ -43,25 +45,76 @@
     }
 
     @keyframes flicker {
-      0%, 18%, 22%, 25%, 53%, 57%, 100% {
-        opacity: 1;
-      }
-      20%, 24%, 55% {
-        opacity: 0.7;
-      }
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.7; }
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .tab-button {
+      background: transparent;
+      border: 1px solid #0f0;
+      color: #0f0;
+      padding: 8px 20px;
+      cursor: pointer;
+      font-size: 1em;
+      text-shadow: 0 0 5px #0f0;
+    }
+
+    .tab-button.active {
+      background: #0f0;
+      color: #000;
+      text-shadow: none;
     }
 
     .table-container {
+      max-height: 400px; /* or height: 400px; */
+      overflow-y: auto;
       overflow-x: auto;
       width: 100%;
       max-width: 800px;
       animation: flicker 3s infinite;
+      display: none;
+      position: relative;
+      z-index: 3;
+      scrollbar-width: thin;           /* For Firefox */
+      scrollbar-color: #00ff00 #000;   /* For Firefox */
+    }
+
+    .table-container.active {
+      display: block;
+    }
+    
+    /* Webkit browsers */
+    .table-container::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #00ff00 40%, #003300 100%);
+      border-radius: 6px;
+      box-shadow: 0 0 8px 2px #00ff00;
+      border: 2px solid #003300;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: #000;
+      box-shadow: 0 0 5px #003300 inset;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       color: #0f0;
+      background-color: rgba(0, 0, 0, 0.8);
     }
 
     th, td {
@@ -94,24 +147,6 @@
       }
     }
 
-    /* 🌌 Star styles */
-    .star {
-      position: fixed;
-      width: 2px;
-      height: 2px;
-      background: #0f0;
-      border-radius: 50%;
-      opacity: 0.5;
-      animation: twinkle 2s infinite alternate;
-      z-index: -2;
-    }
-
-    @keyframes twinkle {
-      from { opacity: 0.2; }
-      to { opacity: 1; }
-    }
-
-    /* 📺 Scanlines overlay */
     .scanlines {
       pointer-events: none;
       position: fixed;
@@ -124,7 +159,14 @@
         transparent 1px,
         transparent 3px
       );
-      z-index: -1;
+      z-index: 2;
+    }
+
+    canvas#matrixCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
     }
 
     .click-message {
@@ -134,26 +176,30 @@
       animation: flicker 1.5s infinite;
       text-align: center;
       cursor: pointer;
+      z-index: 3;
+      position: relative;
     }
   </style>
 </head>
 <body>
 
-  <!-- 🎵 Music -->
   <audio id="bgMusic" loop>
     <source src="cyberpunk-audio.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
-  <!-- 📺 Scanlines -->
+  <canvas id="matrixCanvas"></canvas>
   <div class="scanlines"></div>
 
-  <!-- 🏆 Headings -->
   <h2>AI & T-shirt Giveaway</h2>
-  <h1>College Leaderboard</h1>
+  <h1>Leaderboard</h1>
 
-  <!-- 📊 Leaderboard Table -->
-  <div class="table-container">
+  <div class="tabs">
+    <button class="tab-button active" data-target="collegeLeaderboard">College Leaderboard</button>
+    <button class="tab-button" data-target="agentLeaderboard">Giveaway Agent Leaderboard</button>
+  </div>
+
+  <div id="collegeLeaderboard" class="table-container active">
     <table>
       <thead>
         <tr>
@@ -170,7 +216,7 @@
         <tr><td>5</td><td>Pimpri Chinchwad University </td><td><span class="count" data-target="3">0</span></td></tr>
         <tr><td>5</td><td>Galgotias</td><td><span class="count" data-target="3">0</span></td></tr>
         <tr><td>5</td><td>Lovely Professional University</td><td><span class="count" data-target="3">0</span></td></tr>
-        <tr><td>8</td><td>Chandigarh University</td><td><span class="count" data-target="2">0</span></td></tr>      
+        <tr><td>8</td><td>Chandigarh University</td><td><span class="count" data-target="2">0</span></td></tr>
         <tr><td>8</td><td>SRM University</td><td><span class="count" data-target="2">0</span></td></tr>
         <tr><td>10</td><td>Amity University</td><td><span class="count" data-target="1">0</span></td></tr>
         <tr><td>10</td><td>GL Bajaj</td><td><span class="count" data-target="1">0</span></td></tr>
@@ -183,11 +229,34 @@
     </table>
   </div>
 
-  <!-- 👇 Message for music -->
+<div id="agentLeaderboard" class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>No. of Giveaways</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Mausam Kumar</td><td>3</td></tr>
+        <tr><td>2</td><td>Divyanshu Verma</td><td>1</td></tr>
+        <tr><td>3</td><td>Akshat Talwar</td><td>0</td></tr>
+        <tr><td>3</td><td>Akshit choudhary</td><td>0</td></tr>
+        <tr><td>3</td><td>Mamoon Ataur Rahman</td><td>0</td></tr>
+        <tr><td>3</td><td>Mukul Chaudhary</td><td>0</td></tr>
+        <tr><td>3</td><td>Shreekant Sunil Lohagale</td><td>0</td></tr>
+        <tr><td>3</td><td>Siddharth Singhal</td><td>0</td></tr>
+        <tr><td>3</td><td>Tanvir Hussain</td><td>0</td></tr>
+        <tr><td>3</td><td>VISHAL</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <p class="click-message" id="clickMessage">Click anywhere to play cyberpunk music</p>
 
   <script>
-    // 📈 Animate counters
+        // Counter animation
     const counters = document.querySelectorAll('.count');
     counters.forEach(counter => {
       const updateCount = () => {
@@ -203,8 +272,44 @@
       };
       updateCount();
     });
+    // Matrix rain effect
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
 
-    // 🔊 Play music on first click & hide message
+    const letters = "アァイィウヴエェオカガキギクグケゲコゴサザABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // darker fade
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0a0"; // dimmer green
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 33);
+
+    // Resize canvas on window resize
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Music on click
     let musicPlayed = false;
     document.body.addEventListener('click', () => {
       if (!musicPlayed) {
@@ -215,17 +320,21 @@
       }
     });
 
-    // 🌠 Generate stars
-    const starCount = 150; // Fixed number of stars
-    for (let i = 0; i < starCount; i++) {
-      const star = document.createElement("div");
-      star.classList.add("star");
-      star.style.top = `${Math.random() * 100}vh`;
-      star.style.left = `${Math.random() * 100}vw`;
-      star.style.opacity = Math.random().toFixed(2);
-      star.style.animationDuration = `${1 + Math.random() * 2}s`;
-      document.body.appendChild(star);
-    }
+    // Tabs
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.table-container');
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        tabContents.forEach(content => {
+          content.classList.remove('active');
+          if (content.id === button.getAttribute('data-target')) {
+            content.classList.add('active');
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>
